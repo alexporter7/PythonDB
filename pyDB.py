@@ -14,6 +14,11 @@
 
 import mysql.connector
 
+log = []
+log_file_name = "log.txt"
+log_file = open(log_file_name, 'a')
+
+print("\nStarting pyDB.py")
 print("Opening info file")
 
 try:
@@ -32,7 +37,7 @@ except:
     print("File could not be found or open")
     exit_with_code(1)
 
-print("Connecting to database")
+print("Connecting to {}".format(h))
 
 pwd = input("Password>")
 
@@ -40,7 +45,7 @@ try:
     db = mysql.connector.connect(host=h,user=u,password=pwd,database=d, port=p)
     cur = db.cursor()
 except:
-    print("Could not connect to database")
+    print("Could not connect to {}".format(h))
     exit_with_code(2)
 
 print("Connected to {}".format(h))
@@ -48,8 +53,10 @@ print("Connected to {}".format(h))
 def log(text):
     pass
 
+
 def exit_with_code(code):
     log(code)
+    print("Exited with code {}".format(code) + "\n")
     exit()
 
 #============== SHOW TABLES ==============
@@ -59,10 +66,24 @@ def show_tables():
     for x in cur:
         arr.append(x)
 
-    print("======= TABLES =======")
+    print("\n======= TABLES =======")
 
     for o in arr:
-        print(o)
+        for l in o:
+            print(l)
+
+    print("")
+
+#============== SHOW A TABLE ==============
+def show_a_table(table_name):
+    cur.execute("SELECT * FROM {}".format(table_name))
+
+    print("\n======= ROWS IN {} =======".format(table_name))
+
+    for x in cur:
+        print(x)
+
+    print("")
 
 #============== MENU ==============
 def menu():
@@ -72,6 +93,9 @@ def menu():
         show_tables()
     elif command == "exit":
         exit_with_code(0)
+    elif command == "show table":
+        tbl_name = input("Table Name>")
+        show_a_table(tbl_name)
     else:
         print(command)
         exit_with_code(0)
