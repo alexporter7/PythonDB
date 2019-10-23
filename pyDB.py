@@ -13,6 +13,7 @@
 #===============================================================================
 
 import mysql.connector
+from getpass import getpass
 
 log = []
 log_file_name = "log.txt"
@@ -39,7 +40,7 @@ except:
 
 print("Connecting to {}".format(h))
 
-pwd = input("Password>")
+pwd = getpass()
 
 try:
     db = mysql.connector.connect(host=h,user=u,password=pwd,database=d, port=p)
